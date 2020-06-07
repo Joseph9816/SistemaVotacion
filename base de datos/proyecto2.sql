@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 04-06-2020 a las 23:06:02
+-- Tiempo de generación: 07-06-2020 a las 04:11:09
 -- Versión del servidor: 10.4.11-MariaDB
 -- Versión de PHP: 7.4.5
 
@@ -77,6 +77,17 @@ CREATE TABLE `usuarios` (
   `clave` varchar(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `votos`
+--
+
+CREATE TABLE `votos` (
+  `tipoVoto` varchar(45) NOT NULL,
+  `idCandidato` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 --
 -- Índices para tablas volcadas
 --
@@ -101,6 +112,13 @@ ALTER TABLE `usuarios`
   ADD KEY `fk_tipo` (`tipo`);
 
 --
+-- Indices de la tabla `votos`
+--
+ALTER TABLE `votos`
+  ADD KEY `fk_id_candi` (`idCandidato`),
+  ADD KEY `fk_tipo_voto` (`tipoVoto`);
+
+--
 -- Restricciones para tablas volcadas
 --
 
@@ -109,6 +127,13 @@ ALTER TABLE `usuarios`
 --
 ALTER TABLE `usuarios`
   ADD CONSTRAINT `fk_tipo` FOREIGN KEY (`tipo`) REFERENCES `tiposusuarios` (`idtipos`);
+
+--
+-- Filtros para la tabla `votos`
+--
+ALTER TABLE `votos`
+  ADD CONSTRAINT `fk_id_candi` FOREIGN KEY (`idCandidato`) REFERENCES `candidatos` (`idcandidatos`),
+  ADD CONSTRAINT `fk_tipo_voto` FOREIGN KEY (`tipoVoto`) REFERENCES `tiposusuarios` (`idtipos`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
