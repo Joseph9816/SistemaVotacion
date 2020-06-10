@@ -9,12 +9,53 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\ValidarFormulario;
+use app\models\Candidatos;
 
 class SiteController extends Controller
 {
     /**
      * {@inheritdoc}
      */
+
+    public function actionView(){
+        $table =  new Candidatos;
+        $model = $table->find()->all();
+        return $this->render("view", ["model" => $model]);
+    }
+    /*public function actionSaluda(){
+        $mensaje = "hola";
+        return $this->render("saluda",["mensaje" =>$mensaje]);
+    }
+    public function actionRegistrarse($mensaje = null){
+
+        return $this->render("registrarse", ["mensaje" =>$mensaje]);
+
+    }
+    public function actionRequest(){
+        $mensaje = null;
+        if(isset($_REQUEST["nombre"])){
+            $mensaje = "Se agrego con exito el usuario:" . $_REQUEST["nombre"];
+        }
+        $this->redirect(["site/registrarse","mensaje" => $mensaje]);
+
+    }
+    public function actionValidarformulario(){
+        $model = new ValidarFormulario;
+        if($model->load(Yii::$app->request->post())){
+            if($model->validate()){
+
+            }
+            else{
+                $model->getErrors();
+            }
+        }
+        return $this->render("validarformulario", ["model" => $model]);
+    }*/
+
+
+
+
     public function behaviors()
     {
         return [
