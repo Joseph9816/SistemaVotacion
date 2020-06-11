@@ -11,6 +11,7 @@ use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\ValidarFormulario;
 use app\models\Candidatos;
+use app\models\Usuarios;
 
 class SiteController extends Controller
 {

@@ -1,48 +1,48 @@
 <?php
 
 namespace app\models;
+//use app\models\Usuarios;
 
 class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
 {
+    
     public $id;
     public $username;
     public $password;
-    public $authKey;
-    public $accessToken;
-
-    private static $users = [
-        '100' => [
-            'id' => '100',
-            'username' => 'admin',
-            'password' => 'admin',
-            'authKey' => 'test100key',
-            'accessToken' => '100-token',
-        ],
-        '101' => [
-            'id' => '101',
-            'username' => 'demo',
-            'password' => 'demo',
-            'authKey' => 'test101key',
-            'accessToken' => '101-token',
-        ],
-    ];
-
+    public $tipo;
+    //public $authKey;
+    //public $accessToken;
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
+    
+    /* busca la identidad del usuario a través de su $id */
+
     public static function findIdentity($id)
     {
-        return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
+        $model = new Usuarios;
+        $user = $model->find()
+                ->where("idusuarios=:idusuarios", [":idusuarios" => $id])
+                ->one();
+        
+        return isset($user) ? new static($user) : null;
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public static function findIdentityByAccessToken($token, $type = null)
+    
+    /* Busca la identidad del usuario a través de su token de acceso */
+    /*public static function findIdentityByAccessToken($token, $type = null)
     {
-        foreach (self::$users as $user) {
-            if ($user['accessToken'] === $token) {
+        
+        $users = Usuarios::find()
+                ->where("clave=:clave", [":clave" => $token])
+                ->all();
+        
+        foreach ($users as $user) {
+            if ($user->password === $token) {
                 return new static($user);
             }
         }
@@ -53,13 +53,19 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
     /**
      * Finds user by username
      *
-     * @param string $username
+     * @param  string      $username
      * @return static|null
      */
+    
+    /* Busca la identidad del usuario a través del username */
     public static function findByUsername($username)
     {
-        foreach (self::$users as $user) {
-            if (strcasecmp($user['username'], $username) === 0) {
+        $users = Usuarios::find()
+                ->where("nombre=:nombre", [":nombre" => $username])
+                ->all();
+        
+        foreach ($users as $user) {
+            if (strcasecmp($user->username, $username) === 0) {
                 return new static($user);
             }
         }
@@ -68,37 +74,49 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
+    
+    /* Regresa el id del usuario */
     public function getId()
     {
         return $this->id;
     }
 
+    
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public function getAuthKey()
+    
+    /* Regresa la clave de autenticación */
+    /*public function getAuthKey()
     {
         return $this->authKey;
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public function validateAuthKey($authKey)
+    
+    /* Valida la clave de autenticación */
+    /*public function validateAuthKey($authKey)
     {
         return $this->authKey === $authKey;
     }
 
+
     /**
      * Validates password
      *
-     * @param string $password password to validate
-     * @return bool if password provided is valid for current user
+     * @param  string  $password password to validate
+     * @return boolean if password provided is valid for current user
      */
     public function validatePassword($password)
     {
-        return $this->password === $password;
+        /* Valida el password */
+        if ($password == $this->password)
+        {
+        return $password === $password;
+        }
     }
 }
