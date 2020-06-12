@@ -1,7 +1,6 @@
 <?php
 
 namespace app\models;
-//use app\models\Usuarios;
 
 class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
 {
@@ -10,8 +9,6 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
     public $username;
     public $password;
     public $tipo;
-    //public $authKey;
-    //public $accessToken;
 
     /**
      * @inheritdoc
@@ -24,29 +21,21 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
         $model = new Usuarios;
         $user = $model->find()
                 ->where("idusuarios=:idusuarios", [":idusuarios" => $id])
-                ->one();
-        
-        return isset($user) ? new static($user) : null;
-    }
+                ->one();/*
+        static $user = null;
+        $tabla = $model->find()->all();
 
-    /**
-     * @inheritdoc
-     */
-    
-    /* Busca la identidad del usuario a través de su token de acceso */
-    /*public static function findIdentityByAccessToken($token, $type = null)
-    {
-        
-        $users = Usuarios::find()
-                ->where("clave=:clave", [":clave" => $token])
-                ->all();
-        
-        foreach ($users as $user) {
-            if ($user->password === $token) {
-                return new static($user);
+        foreach($tabla as $row):
+            if($row->idusuarios == $id)
+            {
+                $user = $row;
+                $password = $row->clave;
             }
+        endforeach;*/
+        if(isset($user))
+        {
+            return new static($user);
         }
-
         return null;
     }
 
@@ -83,28 +72,6 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
         return $this->id;
     }
 
-    
-    /**
-     * @inheritdoc
-     */
-    
-    /* Regresa la clave de autenticación */
-    /*public function getAuthKey()
-    {
-        return $this->authKey;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    
-    /* Valida la clave de autenticación */
-    /*public function validateAuthKey($authKey)
-    {
-        return $this->authKey === $authKey;
-    }
-
-
     /**
      * Validates password
      *
@@ -116,7 +83,7 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
         /* Valida el password */
         if ($password == $this->password)
         {
-        return $password === $password;
+            return $password === $password;
         }
     }
 }
