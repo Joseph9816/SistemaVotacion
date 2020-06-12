@@ -11,7 +11,7 @@ use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\ValidarFormulario;
 use app\models\Candidatos;
-use app\models\Usuarios;
+use app\models\Votos;
 
 class SiteController extends Controller
 {
@@ -21,8 +21,10 @@ class SiteController extends Controller
 
     public function actionView(){
         $table =  new Candidatos;
+        $table2 = new Votos;
         $model = $table->find()->all();
-        return $this->render("view", ["model" => $model]);
+        $model1 = $table2->find()->all();
+        return $this->render("view", ["model" => $model, "model1" => $model1]);
     }
     /*public function actionSaluda(){
         $mensaje = "hola";
