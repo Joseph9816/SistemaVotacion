@@ -26,6 +26,13 @@ class SiteController extends Controller
         $model1 = $table2->find()->all();
         return $this->render("view", ["model" => $model, "model1" => $model1]);
     }
+    
+    public function actionVotar()
+    {
+        $table =  new Candidatos;
+        $model = $table->find()->all();
+        return $this->render("votar", ["model" => $model]);
+    }
     /*public function actionSaluda(){
         $mensaje = "hola";
         return $this->render("saluda",["mensaje" =>$mensaje]);

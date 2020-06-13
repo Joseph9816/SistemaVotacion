@@ -47,11 +47,16 @@ AppAsset::register($this);
                 '<li>'
                 . Html::beginForm(['/site/logout'], 'post')
                 . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ')',
+                    'Logout (' . Yii::$app->user->identity->idusuarios . ')',
                     ['class' => 'btn btn-link logout']
                 )
                 . Html::endForm()
                 . '</li>'
+            ),
+            Yii::$app->user->isGuest ? (
+                ['label' => 'Votar', 'url' => ['/site/login']]
+            ) : (
+                ['label' => 'Votar', 'url' => ['/site/votar']]
             )
         ],
     ]);

@@ -9,6 +9,8 @@ use miloschuman\highcharts\Highcharts;
     <tr>
         <th>Id candidato</th>
         <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Apellido 2</th>
     </tr>
     <?php 
         $array;
@@ -20,6 +22,8 @@ use miloschuman\highcharts\Highcharts;
     <tr>
         <td><?= $row->idcandidatos ?></td>
         <td><?= $row->nombre ?></td>
+        <td><?= $row->ape1?></td>
+        <td><?= $row->ape2?></td>
     </tr>
     <?php endforeach ?>
 </table>
@@ -34,6 +38,7 @@ use miloschuman\highcharts\Highcharts;
     $aca3 = 0;
     $adm3 = 0;
     $estu3 = 0;
+    $nulo = 0;
     foreach($model1 as $row1):
         if($row1->tipoVoto == 'aca' && $row1->idCandidato == 1)
         {
@@ -71,10 +76,16 @@ use miloschuman\highcharts\Highcharts;
         {
             $estu3++;
         }
+        if($row->idcandidatos == 4){
+            $nulo = $row->cantidad_votos;
+        }
     endforeach;
     $voto1 = ($aca1 * 0.60) + ($adm1 * 0.15) + ($estu1 * 0.25);
     $voto2 = ($aca2 * 0.60) + ($adm2 * 0.15) + ($estu2 * 0.25);
     $voto3 = ($aca3 * 0.60) + ($adm3 * 0.15) + ($estu3 * 0.25);
+    $voto_por_estudiante = $estu1 + $estu2 + $estu3;
+    $voto_por_academico = $aca1 + $aca2 + $aca3;
+    $voto_por_administrativo = $adm1 + $adm2 + $adm3;
 ?>
 
 
@@ -83,15 +94,15 @@ use miloschuman\highcharts\Highcharts;
 
 <?php
 $data = [
-    ['Salom', $voto1],
+    ['Norman', $voto1],
     ['Francisco', $voto2],
-    ['Leiner',$voto3]
+    ['Leiner',$voto3],
+    ['Nulo', $nulo]
 ];
-$tituloGrafica1 = "Clicks por departamento";
-$clickByDeptoChart[] = [ 'name' => 'Sistemas', 'y' => 1];
-$clickByDeptoChart[] = [ 'name' => 'Soporte', 'y' => 4];
-
-$clickByDeptoChart[] = [ 'name' => 'Administracion', 'y' => 6];
+$tituloGrafica1 = "Votos por usuarios";
+$clickByDeptoChart[] = [ 'name' => 'Administrativos', 'y' => $voto_por_administrativo];
+$clickByDeptoChart[] = [ 'name' => 'Academicos', 'y' => $voto_por_academico];
+$clickByDeptoChart[] = [ 'name' => 'Estudiantes', 'y' => $voto_por_estudiante];
 ?>
 
 <?= 
@@ -133,10 +144,10 @@ Highcharts::widget([
         'chart' => ['type' => 'column'],
         'title' => ['text' => $tituloGrafica1],
         'xAxis' => ['type' => 'category'],
-        'yAxis' => ['title' => ['text' => 'click por departamento']],
+        'yAxis' => ['title' => ['text' => 'Votos por usuario']],
         'series' => [
             [
-                'name' => 'Dio Click',
+                'name' => 'Votaron',
                 'colorByPoint' => true,
                 'data' => $clickByDeptoChart
             ],
