@@ -19,7 +19,6 @@ class Usuarios extends \yii\db\ActiveRecord implements \yii\web\IdentityInterfac
             'ape2' => Yii::t('app', 'Segundo Apellido'),
             'tipo' => Yii::t('app', 'Tipo'),
             'clave' => Yii::t('app', 'Clave'),
-            'authKey' => Yii::t('app', 'Auth Key'),
         ];
     }
     public static function findIdentity($id){

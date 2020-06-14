@@ -9,9 +9,9 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
-use app\models\ValidarFormulario;
 use app\models\Candidatos;
 use app\models\Votos;
+use app\models\VotarForm;
 
 class SiteController extends Controller
 {
@@ -27,45 +27,71 @@ class SiteController extends Controller
         return $this->render("view", ["model" => $model, "model1" => $model1]);
     }
     
-    public function actionVotar()
+    public function actionVotar($mensaje = null)
     {
+        
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
         $table =  new Candidatos;
         $model = $table->find()->all();
-        return $this->render("votar", ["model" => $model]);
+        return $this->render("votar", ["model" => $model, "mensaje" => $mensaje]);
     }
-    /*public function actionSaluda(){
-        $mensaje = "hola";
-        return $this->render("saluda",["mensaje" =>$mensaje]);
-    }
-    public function actionRegistrarse($mensaje = null){
-
-        return $this->render("registrarse", ["mensaje" =>$mensaje]);
-
-    }
-    public function actionRequest(){
-        $mensaje = null;
-        if(isset($_REQUEST["nombre"])){
-            $mensaje = "Se agrego con exito el usuario:" . $_REQUEST["nombre"];
-        }
-        $this->redirect(["site/registrarse","mensaje" => $mensaje]);
-
-    }
-    public function actionValidarformulario(){
-        $model = new ValidarFormulario;
-        if($model->load(Yii::$app->request->post())){
-            if($model->validate()){
-
+    
+    public function actionRequest()
+    {
+        $cont = 0;
+        $candidato = null;
+        $table =  new Candidatos;
+        $model = $table->find()->all();
+        foreach ($model as $mod):
+            if(isset($_REQUEST['' . $mod->nombre]))
+            {
+                $candidato[$cont] = $mod->nombre;
+                $cont++;
             }
-            else{
-                $model->getErrors();
+        endforeach;
+        if($cont > 1)
+        {
+            $mensaje = "Solo puede seleccionar una opcion";
+            $this->redirect(["site/votar", "mensaje" => $mensaje]);
+        }
+        else if($cont == 0)
+        {
+            $mensaje = "Tiene que seleccionar una opcion";
+            $this->redirect(["site/votar", "mensaje" => $mensaje]);
+        }
+        else
+        {
+            $validar = new VotarForm;
+            $yaVoto = $validar->yaVoto();
+            if($yaVoto == "0")
+            {
+                $rVoto = $validar->votar($candidato[0]);
+                if($rVoto == "1")
+                {
+                    $mensaje = "Voto registrado";
+                    $this->redirect(["site/votar", "mensaje" => $mensaje]);
+                }
+                else if($rVoto == "2")
+                {
+                    $mensaje = "Error al cambiar que ya voto";
+                    $this->redirect(["site/votar", "mensaje" => $mensaje]);
+                }
+                else
+                {
+                    $mensaje = "Error al registrar";
+                    $this->redirect(["site/votar", "mensaje" => $mensaje]);
+                }
+            }
+            else
+            {
+                $mensaje = "No puede votar mas de una vez";
+                $this->redirect(["site/votar", "mensaje" => $mensaje]);
             }
         }
-        return $this->render("validarformulario", ["model" => $model]);
-    }*/
-
-
-
-
+    }
+    
     public function behaviors()
     {
         return [
